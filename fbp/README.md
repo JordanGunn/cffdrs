@@ -49,40 +49,45 @@ Fuel type definitions and model implementations:
 
 ### Basic Calculations
 ```python
-from loki.api.cffdrs.fbp import ros, hfi, fd
-from loki.api.cffdrs.fbp.fuel import Code
+import cffdrs
+from cffdrs.fbp.fuel import Code
 
 # Rate of Spread
-rate = ros(Code.C2, bui=50.0, isi=8.0, lat=55.0)
+rate = cffdrs.fbp.ros(Code.C2, bui=50.0, isi=8.0, lat=55.0)
 
 # Head Fire Intensity  
-intensity = hfi(Code.C2, ros=rate, ffmc=85.0, bui=50.0, isi=8.0)
+intensity = cffdrs.fbp.hfi(Code.C2, ros=rate, ffmc=85.0, bui=50.0, isi=8.0)
 
 # Fire Description
-description = fd(Code.C2, bui=50.0, isi=8.0, lat=55.0)
+description = cffdrs.fbp.fd(Code.C2, bui=50.0, isi=8.0, lat=55.0)
 ```
 
 ### Vectorized Processing
 ```python
 import numpy as np
+import cffdrs
+from cffdrs.fbp.fuel import Code
 
 # Multiple scenarios
 bui_vals = np.array([30.0, 50.0, 80.0])
 isi_vals = np.array([5.0, 8.0, 12.0])
 
-ros_results = ros(Code.C3, bui=bui_vals, isi=isi_vals)
+ros_results = cffdrs.fbp.ros(Code.C3, bui=bui_vals, isi=isi_vals)
 ```
 
 ### Fuel Modifiers
 ```python
+import cffdrs
+from cffdrs.fbp.fuel import Code
+
 # M1/M2: pc (percentage conifer, default 80.0)
-ros_m1 = ros(Code.M1, bui=45.0, isi=7.0, modifier=60.0)
+ros_m1 = cffdrs.fbp.ros(Code.M1, bui=45.0, isi=7.0, modifier=60.0)
 
 # M3/M4: pdf (percentage dead balsam fir, default 35.0)  
-ros_m3 = ros(Code.M3, bui=55.0, isi=9.0, modifier=25.0)
+ros_m3 = cffdrs.fbp.ros(Code.M3, bui=55.0, isi=9.0, modifier=25.0)
 
 # O1A/O1B: cc (crown closure, default 50.0)
-ros_o1a = ros(Code.O1A, bui=40.0, isi=6.0, modifier=70.0)
+ros_o1a = cffdrs.fbp.ros(Code.O1A, bui=40.0, isi=6.0, modifier=70.0)
 ```
 
 ## Special Cases
@@ -90,8 +95,11 @@ ros_o1a = ros(Code.O1A, bui=40.0, isi=6.0, modifier=70.0)
 ### C6 Fuel Type
 Requires Foliar Moisture Content (FMC) calculation from latitude:
 ```python
+import cffdrs
+from cffdrs.fbp.fuel import Code
+
 # C6 automatically calculates FMC from lat parameter
-ros_c6 = ros(Code.C6, bui=70.0, isi=15.0, lat=49.0)
+ros_c6 = cffdrs.fbp.ros(Code.C6, bui=70.0, isi=15.0, lat=49.0)
 ```
 
 ## Integration

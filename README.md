@@ -1,6 +1,28 @@
-# CFFDRS API
+# CFFDRS
 
-The Canadian Forest Fire Danger Rating System (CFFDRS) API provides comprehensive fire weather and fire behavior prediction capabilities. This module implements the complete CFFDRS calculation suite including the Fire Weather Index (FWI) System and Fire Behavior Prediction (FBP) System.
+The Canadian Forest Fire Danger Rating System (CFFDRS) API provides comprehensive fire weather and fire behavior prediction capabilities. This package implements the complete CFFDRS calculation suite including the Fire Weather Index (FWI) System and Fire Behavior Prediction (FBP) System.
+
+## Installation
+
+This package can be installed using Poetry:
+
+```bash
+# Clone the repository
+git clone https://github.com/JordanGunn/cffdrs.git
+cd cffdrs
+
+# Install with Poetry
+poetry install
+
+# Or install with pip (in development mode)
+pip install -e .
+```
+
+### Dependencies
+
+- Python 3.8.1+
+- NumPy 1.24.0+
+- Numba 0.58.0+
 
 ## Overview
 
@@ -8,9 +30,37 @@ The CFFDRS API is organized into several key components:
 
 - **FWI System** (`fwi/`): Fire Weather Index calculations including moisture codes and fire behavior indices
 - **FBP System** (`fbp/`): Fire Behavior Prediction calculations for rate of spread, fire intensity, and fire description
-- **Temporal Processing** (`temporal/`): Time-series processing and daily weather sequence handling
-- **Raster Operations** (`raster/`): Spatial grid-based calculations for landscape-scale fire modeling
+- **Raster Operations** (`raster/`): Spatial grid-based calculations for landscape-scale fire modeling (requires additional dependencies)
 - **Parameters** (`param.py`): Common parameter definitions and validation
+
+## Quick Start
+
+```python
+import cffdrs
+
+# FWI System calculations
+ffmc_result = cffdrs.fwi.ffmc(temp=20.0, rh=45.0, ws=15.0, prec=0.0, ffmc0=85.0)
+dmc_result = cffdrs.fwi.dmc(temp=20.0, prec=0.0, rh=45.0, dmc0=25.0, month=7)
+dc_result = cffdrs.fwi.dc(temp=20.0, prec=0.0, dc_prev=150.0, month=7)
+
+# Calculate fire behavior indices
+isi_result = cffdrs.fwi.isi(ffmc=ffmc_result, ws=15.0)
+bui_result = cffdrs.fwi.bui(dmc=dmc_result, dc=dc_result)
+fwi_result = cffdrs.fwi.fwi(isi=isi_result, bui=bui_result)
+
+print(f"FFMC: {ffmc_result:.2f}")
+print(f"FWI: {fwi_result:.2f}")
+
+# FBP System calculations (requires fuel type)
+from cffdrs.fbp.fuel import Code
+
+ros_result = cffdrs.fbp.ros(code=Code.C2, bui=bui_result, isi=isi_result)
+hfi_result = cffdrs.fbp.hfi(code=Code.C2, ros=ros_result, ffmc=ffmc_result, 
+                            bui=bui_result, isi=isi_result)
+
+print(f"Rate of Spread: {ros_result:.2f} m/min")
+print(f"Head Fire Intensity: {hfi_result:.2f} kW/m")
+```
 
 ## Architecture
 
@@ -29,28 +79,9 @@ The CFFDRS API follows a modular design with clear separation between:
 - **Modular Design**: Clean separation of concerns following Single Responsibility Principle
 - **Performance Optimized**: Cached properties and lazy evaluation for complex calculations
 
-## Usage
-
-```python
-from loki.api.cffdrs import fwi, fbp
-
-# FWI System calculations
-fwi_result = fwi.calculate(
-    temp=20.0, rh=45.0, wind=15.0, prec=0.0,
-    ffmc_prev=85.0, dmc_prev=25.0, dc_prev=150.0
-)
-
-# FBP System calculations
-fbp_result = fbp.calculate(
-    fuel_codes=['C1', 'C2'], 
-    weather_data=weather_inputs,
-    modifiers={'pc': 50, 'pdf': 35, 'cc': 80}
-)
-```
-
 ## Modules
 
-### FWI System (`fwi/`)
+### FWI System (`cffdrs.fwi`)
 Fire Weather Index System calculations including:
 - Fine Fuel Moisture Code (FFMC)
 - Duff Moisture Code (DMC) 
@@ -60,32 +91,29 @@ Fire Weather Index System calculations including:
 - Fire Weather Index (FWI)
 - Daily Severity Rating (DSR)
 
-### FBP System (`fbp/`)
+### FBP System (`cffdrs.fbp`)
 Fire Behavior Prediction System calculations including:
 - Rate of Spread (ROS)
 - Head Fire Intensity (HFI)
 - Fire Description (FD)
 - Fuel-specific behavior modeling
 
-### Temporal Processing (`temporal/`)
-Time-series processing capabilities for:
-- Daily weather sequence processing
-- Historical data integration
-- Seasonal adjustments
-- Multi-day fire weather calculations
+### Fuel Types (`cffdrs.fbp.fuel`)
+Canadian Forest Service fuel type definitions:
+- Conifer fuels (C1-C7)
+- Deciduous fuels (D1-D2)
+- Mixed fuels (M1-M4)
+- Grass fuels (O1A, O1B)
+- Slash fuels (S1-S3)
 
-### Raster Operations (`raster/`)
+### Raster Operations (`cffdrs.raster`)
 Spatial grid-based processing for:
 - Landscape-scale fire modeling
 - Spatial interpolation
 - Grid-based calculations
 - Map generation support
 
-## Dependencies
-
-- NumPy: Vectorized numerical operations
-- Numba: Just-in-time compilation for performance
-- Pydantic: Data validation and serialization
+*Note: Raster operations require additional dependencies (xarray, rasterio) and are optional.*
 
 ## Standards Compliance
 
@@ -95,3 +123,32 @@ This implementation follows the official CFFDRS standards as defined by:
 - Provincial fire management agencies
 
 All calculations are validated against reference implementations and standard test cases.
+
+## Development
+
+### Running Tests
+
+```bash
+poetry run pytest
+```
+
+### Code Formatting
+
+```bash
+poetry run black .
+poetry run isort .
+```
+
+### Type Checking
+
+```bash
+poetry run mypy .
+```
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please read the contributing guidelines and submit pull requests for any improvements.

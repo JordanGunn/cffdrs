@@ -11,10 +11,10 @@ from typing import Optional
 
 import numpy as np
 
-from loki.api.cffdrs import fwi
-from loki.api.cffdrs.fbp.fuel import Code, Model
-from loki.api.cffdrs.fbp.fuel import model as factory
-from loki.api.cffdrs.param import Param, broadcast
+from cffdrs import fwi
+from cffdrs.param import Param, broadcast
+from .fuel import Code, Model
+from .fuel import model as factory
 
 
 def hfi(
