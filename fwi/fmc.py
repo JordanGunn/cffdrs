@@ -4,7 +4,7 @@ from typing import Final
 
 import numpy as np
 
-from loki.api.cffdrs.param import broadcast
+from cffdrs.param import broadcast
 
 
 class Default:

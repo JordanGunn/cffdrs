@@ -11,9 +11,9 @@ from typing import Optional
 
 import numpy as np
 
-from loki.api.cffdrs import fwi
-from loki.api.cffdrs.fbp.fuel import Code, factory
-from loki.api.cffdrs.param import Param
+from cffdrs import fwi
+from cffdrs.param import Param
+from .fuel import Code, factory
 
 
 def fd(

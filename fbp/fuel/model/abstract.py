@@ -5,7 +5,7 @@ from typing import Final
 
 import numpy as np
 
-from loki.api.cffdrs.param import Param
+from cffdrs.param import Param
 
 from ..code import Code
 from ..description import Description

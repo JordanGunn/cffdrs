@@ -21,12 +21,12 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import xarray as xr
 
-from loki.api.cffdrs.fbp import fd as fbp_fd
-from loki.api.cffdrs.fbp import hfi as fbp_hfi
+from cffdrs.fbp import fd as fbp_fd
+from cffdrs.fbp import hfi as fbp_hfi
 
 # Import vectorized FBP functions
-from loki.api.cffdrs.fbp import ros as fbp_ros
-from loki.api.cffdrs.fbp.fuel.code import Code
+from cffdrs.fbp import ros as fbp_ros
+from cffdrs.fbp.fuel.code import Code
 
 Array = np.ndarray
 

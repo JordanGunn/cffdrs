@@ -1,4 +1,4 @@
-from loki.api.cffdrs.metric import Metric as Base
+from cffdrs.metric import Metric as Base
 
 
 class Metric(Base):

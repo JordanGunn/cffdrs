@@ -7,7 +7,7 @@ import numpy as np
 import xarray as xr
 from rasterio.profiles import Profile
 
-from loki.api.cffdrs import fwi as cffdrs
+from cffdrs import fwi as cffdrs
 
 #: Shorthand type-ref
 Array = np.ndarray
