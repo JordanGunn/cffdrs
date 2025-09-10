@@ -113,7 +113,13 @@ Spatial grid-based processing for:
 - Grid-based calculations
 - Map generation support
 
-*Note: Raster operations require additional dependencies (xarray, rasterio) and are optional.*
+#### Note: About Raster operations 
+This was preserved as part of a larger project, and as such, is not recommended for use yet. While they do work, additional type-safety constraints should be added to prevent the passing of malformatted data or incorrect band ordering. 
+
+The functions were designed with full `dask` compatibility in mind, and as such, require additional dependencies (`xarray`, `rasterio`, `rioxarray`). This was implemented to enable distributed computing
+for rapid computation of fire-weather and fuel-behaviour rasters over very large geographic areas (and works very well).
+
+In summary, these functions work, but I would like to add some additional type-safety constraints to make them more user-friendly.
 
 ## Standards Compliance
 
